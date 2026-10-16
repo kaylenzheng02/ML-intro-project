@@ -5,7 +5,7 @@ from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report
 from sklearn.model_selection import train_test_split
-from sklearn.pipeline import make_pipeline
+from sklearn.pipeline import Pipeline, make_pipeline
 from sklearn.preprocessing import StandardScaler
 
 
@@ -17,6 +17,14 @@ FEATURES = [
     "body_mass_g",
 ]
 TARGET = "species"
+
+
+def build_model() -> Pipeline:
+    return make_pipeline(
+        SimpleImputer(strategy="median"),
+        StandardScaler(),
+        LogisticRegression(max_iter=1000),
+    )
 
 
 def main() -> None:
@@ -32,11 +40,7 @@ def main() -> None:
         stratify=labels,
     )
 
-    model = make_pipeline(
-        SimpleImputer(strategy="median"),
-        StandardScaler(),
-        LogisticRegression(max_iter=1000),
-    )
+    model = build_model()
     model.fit(x_train, y_train)
     predictions = model.predict(x_test)
 
